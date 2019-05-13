@@ -363,7 +363,7 @@ GEO_Vox::fileLoad(GEO_Detail* detail, UT_IStream& stream, bool ate_magic)
 #endif
 
 #else
-	// カラーも設定
+	// set color to Cd
 	GA_RWHandleV3 cdh(gu_detail->findPointAttribute("Cd"));
 	if (!cdh.isValid())
 	{
@@ -375,7 +375,7 @@ GEO_Vox::fileLoad(GEO_Detail* detail, UT_IStream& stream, bool ate_magic)
     for(unsigned int idx_vox = 0, vox_entries = vox_voxels.entries(); idx_vox < vox_entries; ++idx_vox)
     {
         GEO_VoxVoxel vox_voxel = vox_voxels(idx_vox);
-		// [0, 254] までのカラーはパレットインデックス [1, 255] に割り当てられる
+		// colors in [0, 254] assigning to pallete index [1, 255]
         const GEO_VoxPaletteColor& vox_palette_color = vox_palette(vox_voxel.palette_index-1);
 
 #if 0
