@@ -340,6 +340,10 @@ GEO_Vox::fileLoad(GEO_Detail* detail, UT_IStream& stream, bool ate_magic)
             vox_palette(idx) = vox_palette_color;
         }
     }
+	// set voxel size to detail attrib
+	detail->addIntTuple(GA_ATTRIB_DETAIL, "vox_size_x", 1, GA_Defaults(int32(vox_size_x)));
+	detail->addIntTuple(GA_ATTRIB_DETAIL, "vox_size_y", 1, GA_Defaults(int32(vox_size_y)));
+	detail->addIntTuple(GA_ATTRIB_DETAIL, "vox_size_z", 1, GA_Defaults(int32(vox_size_z)));
 
     detail->addStringTuple(GA_ATTRIB_PRIMITIVE, "name", 1);
     GA_RWHandleS name_attrib(detail->findPrimitiveAttribute("name"));
@@ -397,7 +401,7 @@ GEO_Vox::fileLoad(GEO_Detail* detail, UT_IStream& stream, bool ate_magic)
 		GA_Offset pt_off = gu_detail->appendPointOffset();
 
 #ifdef GEOVOX_SWAP_HOUDINI_AXIS
-		UT_Vector3 v((fpreal)-vox_voxel.x, (fpreal)vox_voxel.z, (fpreal)vox_voxel.y);
+		UT_Vector3 v((fpreal)vox_voxel.x, (fpreal)vox_voxel.z, (fpreal)vox_voxel.y);
 #else
 		UT_Vector3 v((fpreal)vox_voxel.x, (fpreal)vox_voxel.y, (fpreal)vox_voxel.z);
 #endif
