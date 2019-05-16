@@ -11,6 +11,9 @@
 #include <UT/UT_Algorithm.h>
 #include <SYS/SYS_Math.h>
 
+#define IS_OUTPUT_VOLUME	(1)
+#define IS_OUTPUT_POINTS	(1)
+
 #define GEOVOX_SWAP_HOUDINI_AXIS
 #define GEOVOX_VOLUME_NAME "color_lut"
 
@@ -350,7 +353,7 @@ GEO_Vox::fileLoad(GEO_Detail* detail, UT_IStream& stream, bool ate_magic)
     xform.scale(vox_size_x * 0.5f, vox_size_y * 0.5f, vox_size_z * 0.5f);
 #endif
 
-#if 0
+#if (IS_OUTPUT_VOLUME == 1)
     GU_PrimVolume* volume = (GU_PrimVolume*) GU_PrimVolume::build((GU_Detail*) detail);
     volume->setTransform(xform);
     name_attrib.set(volume->getMapOffset(), GEOVOX_VOLUME_NAME);
@@ -361,8 +364,9 @@ GEO_Vox::fileLoad(GEO_Detail* detail, UT_IStream& stream, bool ate_magic)
 #else
     handle->size(vox_size_x, vox_size_y, vox_size_z);
 #endif
+#endif // IS_OUTPUT_VOLUME
 
-#else
+#if (IS_OUTPUT_POINTS == 1)
 	// set color to Cd
 	GA_RWHandleV3 cdh(gu_detail->findPointAttribute("Cd"));
 	if (!cdh.isValid())
@@ -378,7 +382,7 @@ GEO_Vox::fileLoad(GEO_Detail* detail, UT_IStream& stream, bool ate_magic)
 		// colors in [0, 254] assigning to pallete index [1, 255]
         const GEO_VoxPaletteColor& vox_palette_color = vox_palette(vox_voxel.palette_index-1);
 
-#if 0
+#if (IS_OUTPUT_VOLUME == 1)
         if(!IsPaletteColorEmpty(vox_palette_color))
         {
 #ifdef GEOVOX_SWAP_HOUDINI_AXIS
@@ -387,7 +391,9 @@ GEO_Vox::fileLoad(GEO_Detail* detail, UT_IStream& stream, bool ate_magic)
             handle->setValue(vox_voxel.x, vox_voxel.y, vox_voxel.z, (float) vox_voxel.palette_index);
 #endif
         }
-#else
+#endif // (IS_OUTPUT_VOLUME == 1)
+
+#if (IS_OUTPUT_POINTS == 1)
 		GA_Offset pt_off = gu_detail->appendPointOffset();
 
 #ifdef GEOVOX_SWAP_HOUDINI_AXIS
