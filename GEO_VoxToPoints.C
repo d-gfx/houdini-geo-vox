@@ -340,10 +340,24 @@ GEO_Vox::fileLoad(GEO_Detail* detail, UT_IStream& stream, bool ate_magic)
             vox_palette(idx) = vox_palette_color;
         }
     }
-	// set voxel size to detail attrib
+	// store voxel size to detail attrib
 	detail->addIntTuple(GA_ATTRIB_DETAIL, "vox_size_x", 1, GA_Defaults(int32(vox_size_x)));
 	detail->addIntTuple(GA_ATTRIB_DETAIL, "vox_size_y", 1, GA_Defaults(int32(vox_size_y)));
 	detail->addIntTuple(GA_ATTRIB_DETAIL, "vox_size_z", 1, GA_Defaults(int32(vox_size_z)));
+
+	// store Colors to detail attrib
+	GA_RWAttributeRef   color_attr = detail->addFloatTuple(GA_ATTRIB_DETAIL, "ColorPalette", 3 * GEO_Vox::s_vox_palette_size);
+	GA_RWHandleF color_attr_handle(color_attr.getAttribute());
+	for (unsigned int idx = 0; idx < GEO_Vox::s_vox_palette_size; ++idx)
+	{
+		// colors in [0, 254] assigning to pallete index [1, 255]
+		const GEO_VoxPaletteColor& vox_palette_color = vox_palette(idx);
+		GEO_VoxColor vox_color = ConvertPaletteColor(vox_palette_color);
+
+		color_attr_handle.set(GA_Offset(0), 3*idx, vox_color.r);
+		color_attr_handle.set(GA_Offset(0), 3*idx+1, vox_color.g);
+		color_attr_handle.set(GA_Offset(0), 3*idx+2, vox_color.b);
+	}
 
     detail->addStringTuple(GA_ATTRIB_PRIMITIVE, "name", 1);
     GA_RWHandleS name_attrib(detail->findPrimitiveAttribute("name"));
