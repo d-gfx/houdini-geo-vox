@@ -5,10 +5,10 @@ project( HoudiniGeoVoxToPoints )
 list( APPEND CMAKE_PREFIX_PATH "C:/Program Files/Side Effects Software/Houdini 17.5.173/toolkit/cmake" )
 find_package( Houdini REQUIRED )
 
-set( library_name GEO_VoxToPoints )
+set( library_name GEO_Vox )
 add_library(${library_name} SHARED
-	GEO_VoxToPoints.C
-	GEO_VoxToPoints.h
+	GEO_Vox.C
+	GEO_Vox.h
 )
 
 target_link_libraries( ${library_name} Houdini )
